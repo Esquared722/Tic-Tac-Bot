@@ -5,12 +5,15 @@ class Board:
         self.board = [[' ' for x in range(3)] for y in range(3)]
     
     def __str__(self):
-        row = '-----------'
+        boardStr = ''
+        row = '\n-----------\n'
 
         for i in range(3):
             for j in range(3):
-                print(self.board[i][j], end = '|')
-            print(row)
+                boardStr += self.board[i][j] + '|'
+            boardStr += row if i < 2 else ''
+        
+        return boardStr
     
     
     def placePiece(self, piece, posX, posY):
