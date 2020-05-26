@@ -20,6 +20,9 @@ class Board:
         ''' Places piece object in given position on the board, simulating a move'''
         self.board[posY][posX] = piece
     
+    def displayBoard(self):
+        print(self)
+    
     def clearBoard(self):
         ''' Clears board of all pieces '''
         for i in range(3):
