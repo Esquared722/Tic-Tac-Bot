@@ -6,14 +6,19 @@ import board
 class Game:
     ''' Engine for a standard game of Tic-Tac-Toe '''
     __board = []
-    __p1 = Player()
-    __p2 = Player()
+    __p1 = None
+    __p2 = None
     __turn = ''
 
     def __init__(self, board, p1, p2):
         self.__board = board
         self.__p1 = p1
         self.__p2 = p2
+    
+    @classmethod
+    def onePlayer(cls, board, p1):
+        return cls(board, p1)
+
     
     def play(self):
         ''' Goes through the standard mode of play, with coin flip for first move, move making, and winning '''
@@ -30,8 +35,10 @@ class Game:
             if len(self.__board) == 9:
                 print("Draw! Well fought game {} and {}".format(p1Name, p2Name))
                 return;
-
-            coords = input(p1Name if self.__turn == 'p1' else p2Name + ", please submit your move (col, row): ").split(", ")
+            
+            self.__board.displayBoard()
+            player = p1Name if self.__turn == 'p1' else p2Name
+            coords = input("{}, please submit your move (col, row): ".format(player)).split(", ") # check for bad input
             self.__board.displayBoard()
 
             if self.__turn == 'p1':

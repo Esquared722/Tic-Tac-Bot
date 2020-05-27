@@ -5,18 +5,17 @@ class Player:
     __player = 0
     __canMove = False
     __name = ''
-    __piece = Piece()
+    __piece = None
 
     def __init__(self, name):
         self.__player += 1
         self.name = name
         self.__piece = Piece(self)
-
-    def __init__(self):
-        return;
     
     def __str__(self):
         return self.name
+    
+    
     
     def move(self, board, piece, posX, posY):
         board.placePiece(piece, posX, posY)

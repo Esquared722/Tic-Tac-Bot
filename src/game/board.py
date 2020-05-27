@@ -15,6 +15,15 @@ class Board:
         
         return boardStr
     
+    def __len__(self):
+        counter = 0
+
+        for i in range(3):
+            for j in range(3):
+                if self.board[i][j] != ' ':
+                    counter += 1
+        
+        return counter
     
     def placePiece(self, piece, posX, posY):
         ''' Places piece object in given position on the board, simulating a move'''
