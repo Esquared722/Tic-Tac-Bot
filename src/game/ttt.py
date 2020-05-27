@@ -1,8 +1,10 @@
 from random import randint
 from math import floor
 from player import Player
+import board
 
 class Game:
+    ''' Engine for a standard game of Tic-Tac-Toe '''
     __board = []
     __p1 = Player()
     __p2 = Player()
@@ -14,12 +16,14 @@ class Game:
         self.__p2 = p2
     
     def play(self):
+        ''' Goes through the standard mode of play, with coin flip for first move, move making, and winning '''
+
         if randint(0, 1):
             self.__turn = 'p1'
         else: 
             self.__turn = 'p2'
         
-        while checkWin():
+        while True:
             p1Name = self.__p1.getName()
             p2Name = self.__p2.getName()
 
@@ -28,6 +32,7 @@ class Game:
                 return;
 
             coords = input(p1Name if self.__turn == 'p1' else p2Name + ", please submit your move (col, row): ").split(", ")
+            self.__board.displayBoard()
 
             if self.__turn == 'p1':
                 self.__p1.move(self.__board, self.__p1.getPiece(), coords[0], coords[1])
@@ -36,11 +41,16 @@ class Game:
                 self.__p2.move(self.__board, self.__p2.getPiece(), coords[0], coords[1])
                 self.__turn = 'p1'
             
+            if checkWin():
+                break
+            
              
         
         winner = p1Name if self.__turn == 'p2' else p2Name
         print("Congratulations {}, you have won the match!".format(winner))
 
     def checkWin(self):
-        # TODO
-        return;
+        ''' Checks to see a winning board has been made '''
+        b = self.__board
+
+        return b.checkRows() or b.checkCols() or b.checkDiags()

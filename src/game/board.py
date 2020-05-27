@@ -31,3 +31,38 @@ class Board:
     
     def getBoard(self):
         return self.board
+    
+    def checkRows(self, piece):
+        pieceCount = 0
+        for i in range(3):
+            for j in range(3):
+                if self.board[i][j] == piece:
+                    pieceCount += 1
+            if pieceCount == 3:
+                return True
+            pieceCount = 0
+        
+        return False
+    
+    def checkCols(self, piece):
+        pieceCount = 0
+        for i in range(3):
+            for j in range(3):
+                if self.board[j][i] == piece:
+                    pieceCount += 1
+            if pieceCount == 3:
+                return True
+            pieceCount = 0
+        
+        return False
+    
+    def checkDiags(self, piece):
+        pieceCount = 0
+
+        if self.board[0][0] == piece and self.board[1][1] == piece and self.board[2][2] == piece:
+            return True
+        
+        if self.board[0][2] == piece and self.board[1][1] == piece and self.board[2][0] == piece:
+            return True
+        
+        return False
