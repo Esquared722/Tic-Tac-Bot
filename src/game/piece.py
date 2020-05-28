@@ -10,10 +10,17 @@ class Piece:
     ''' Represents a tic-tac-toe piece '''
 
     def __init__(self, player):
-        self.type = Type.X if player == '1' else Type.O
+        self.type = Type.X if player == 1 else Type.O
+        print("p1 type:", self.type)
+
     
     def __str__(self):
-        if self.type:
+        if self.type == Type.O:
+            return 'O'
+        return 'X'
+    
+    def __int__(self):
+        if self.type == Type.O:
             return 'O'
         return 'X'
     

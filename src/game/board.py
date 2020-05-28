@@ -6,11 +6,11 @@ class Board:
     
     def __str__(self):
         boardStr = ''
-        row = '\n-----------\n'
+        row = '---|---|---\n'
 
         for i in range(3):
             for j in range(3):
-                boardStr += self.board[i][j] + '|'
+                boardStr += ' ' + self.board[i][j] + " |" if j < 2 else " {} \n".format(self.board[i][j])
             boardStr += row if i < 2 else ''
         
         return boardStr
@@ -27,7 +27,7 @@ class Board:
     
     def placePiece(self, piece, posX, posY):
         ''' Places piece object in given position on the board, simulating a move'''
-        self.board[posY][posX] = piece
+        self.board[posY][posX] = str(piece)
     
     def displayBoard(self):
         print(self)
@@ -45,7 +45,7 @@ class Board:
         pieceCount = 0
         for i in range(3):
             for j in range(3):
-                if self.board[i][j] == piece:
+                if self.board[i][j] == str(piece):
                     pieceCount += 1
             if pieceCount == 3:
                 return True
@@ -57,7 +57,7 @@ class Board:
         pieceCount = 0
         for i in range(3):
             for j in range(3):
-                if self.board[j][i] == piece:
+                if self.board[j][i] == str(piece):
                     pieceCount += 1
             if pieceCount == 3:
                 return True
@@ -65,13 +65,14 @@ class Board:
         
         return False
     
+    # Try to optimize, by reducing multiple checks
     def checkDiags(self, piece):
         pieceCount = 0
 
-        if self.board[0][0] == piece and self.board[1][1] == piece and self.board[2][2] == piece:
+        if self.board[0][0] == str(piece) and self.board[1][1] == str(piece) and self.board[2][2] == str(piece):
             return True
         
-        if self.board[0][2] == piece and self.board[1][1] == piece and self.board[2][0] == piece:
+        if self.board[0][2] == str(piece) and self.board[1][1] == str(piece) and self.board[2][0] == str(piece):
             return True
         
         return False

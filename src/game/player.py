@@ -8,16 +8,15 @@ class Player:
     __piece = None
 
     def __init__(self, name):
-        self.__player += 1
+        Player.__player += 1
         self.name = name
-        self.__piece = Piece(self)
+        self.__piece = Piece(self.__player)
     
-    def __str__(self):
-        return self.name
+    def __int__(self):
+        return self.__player
     
     
-    
-    def move(self, board, piece, posX, posY):
+    def move(self, board, piece, posX, posY): # check for valid move
         board.placePiece(piece, posX, posY)
     
     
@@ -35,5 +34,6 @@ class Player:
     
     def getPiece(self):
         return self.__piece
+    
 
     

@@ -11,14 +11,17 @@ if __name__ == "__main__":
         p1Name = input("Fantastic!\nWhat is your name player one? ")
         secondPlayer = input("Will you be playing with someone else today?(y/n) ").lower()
 
+        p1 = Player(p1Name)
+
         if secondPlayer == 'y':
             p2Name = input("What is player two's name? ")
             p2 = Player(p2Name)
         
-        p1 = Player(p1Name)
-
         game = Game(Board(), p1, p2)
 
         game.play()
+
+        # Add play again logic
+
     else:
         print("Aww, too bad! Glad to see you another time!")
