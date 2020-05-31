@@ -17,8 +17,13 @@ class Player:
     
     
     def move(self, board, piece, posX, posY): # check for valid move
-        board.placePiece(piece, posX, posY)
+        if self.isValidMove(board, posX, posY):
+            board.placePiece(piece, posX, posY)
+            return True
+        return False
     
+    def isValidMove(self, board, posX, posY):
+        return board.getBoard()[posY][posX] == ' '
     
     def getPlayer(self):
         return self.__player

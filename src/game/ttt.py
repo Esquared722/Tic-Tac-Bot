@@ -30,36 +30,44 @@ class Game:
     def play(self):
         ''' Goes through the standard mode of play, with coin flip for first move, move making, and winning '''
 
+        firstmove = ''
         if randint(0, 1):
             self.__turn = 'p1'
         else: 
             self.__turn = 'p2'
+
+        p1Name = self.__p1.getName()
+        p2Name = self.__p2.getName()
+        player = p1Name if self.__turn == 'p1' else p2Name
+
+        self.__board.displayBoard()
+        print("First turn goes to {} via coin flip!".format(player))
+        
         
         while True:
-            p1Name = self.__p1.getName()
-            p2Name = self.__p2.getName()
-
+            
             if len(self.__board) == 9:
                 print("Draw! Well fought game {} and {}!".format(p1Name, p2Name))
                 return;
             
-            self.__board.displayBoard()
             player = p1Name if self.__turn == 'p1' else p2Name
             coords = input("{}, please submit your move (col, row): ".format(player)).split(", ") # check for bad input
             
-
             if self.__turn == 'p1':
-                self.__p1.move(self.__board, self.__p1.getPiece(), int(coords[0]), int(coords[1]))
+                while not self.__p1.move(self.__board, self.__p1.getPiece(), int(coords[0]), int(coords[1])):
+                    coords = input("Another piece occupies that space. {}, please submit a different move (col, row): ".format(player)).split(", ")
                 self.__turn = 'p2'
             else:
-                self.__p2.move(self.__board, self.__p2.getPiece(), int(coords[0]), int(coords[1]))
+                while not self.__p2.move(self.__board, self.__p2.getPiece(), int(coords[0]), int(coords[1])):
+                    coords = input("Another piece occupies that space. {}, please submit a different move (col, row): ".format(player)).split(", ")
                 self.__turn = 'p1'
+            
+            self.__board.displayBoard()
             
             if self.__checkWin():
                 break
             
              
-        self.__board.displayBoard()
         winner = p1Name if self.__turn == 'p2' else p2Name
         print("Congratulations {}, you have won the match!".format(winner))
 

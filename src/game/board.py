@@ -5,13 +5,14 @@ class Board:
         self.board = [[' ' for x in range(3)] for y in range(3)]
     
     def __str__(self):
-        boardStr = ''
-        row = '---|---|---\n'
+        boardStr = '\n'
+        row = "  ---|---|---\n"
 
         for i in range(3):
+            boardStr += "{} ".format(i)
             for j in range(3):
-                boardStr += ' ' + self.board[i][j] + " |" if j < 2 else " {} \n".format(self.board[i][j])
-            boardStr += row if i < 2 else ''
+                boardStr += " " + self.board[i][j] + " |" if j < 2 else " {} \n".format(self.board[i][j])
+            boardStr += row if i < 2 else "\n   0   1   2\n"
         
         return boardStr
     

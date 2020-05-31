@@ -11,7 +11,6 @@ class Piece:
 
     def __init__(self, player):
         self.type = Type.X if player == 1 else Type.O
-        print("p1 type:", self.type)
 
     
     def __str__(self):
