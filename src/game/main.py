@@ -4,24 +4,24 @@ from board import Board
 
 
 if __name__ == "__main__":
-
-    welcome = input("Welcome to Tic-Tac-Toe! Would you like to play?(y/n) ").lower() # check for bad input
-
-    if welcome == 'y':
-        p1Name = input("Fantastic!\nWhat is your name player one? ")
-        secondPlayer = input("Will you be playing with someone else today?(y/n) ").lower()
+    while True:
+        print("Welcome to Tic-Tac-Toe!")
+        p1Name = input("What is your name? ")
+        secondPlayer = input("Two-player game?(y/n) ").lower()
 
         p1 = Player(p1Name)
 
         if secondPlayer == 'y':
-            p2Name = input("What is player two's name? ")
+            p2Name = input("Player-two, what is your name? ")
             p2 = Player(p2Name)
         
         game = Game(Board(), p1, p2)
 
         game.play()
 
-        # Add play again logic
+        playAgain = input("Would you like to play again?(y/n) ").lower()
 
-    else:
-        print("Aww, too bad! Glad to see you another time!")
+        if playAgain == 'n':
+            break
+    
+    print("Thanks for playing! Hope to see you soon :D")

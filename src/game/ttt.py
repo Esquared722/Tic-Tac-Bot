@@ -51,15 +51,15 @@ class Game:
                 return;
             
             player = p1Name if self.__turn == 'p1' else p2Name
-            coords = input("{}, please submit your move (col, row): ".format(player)).split(", ") # check for bad input
+            coords = input("{}, please submit your move (col, row): ".format(player)).split(", ") # check for bad input or allow for multiple kinds of inputs
             
             if self.__turn == 'p1':
                 while not self.__p1.move(self.__board, self.__p1.getPiece(), int(coords[0]), int(coords[1])):
-                    coords = input("Another piece occupies that space. {}, please submit a different move (col, row): ".format(player)).split(", ")
+                    coords = input("Invalid Move! {}, please submit a different move (col, row): ".format(player)).split(", ")
                 self.__turn = 'p2'
             else:
                 while not self.__p2.move(self.__board, self.__p2.getPiece(), int(coords[0]), int(coords[1])):
-                    coords = input("Another piece occupies that space. {}, please submit a different move (col, row): ".format(player)).split(", ")
+                    coords = input("Invalid Move! {}, please submit a different move (col, row): ".format(player)).split(", ")
                 self.__turn = 'p1'
             
             self.__board.displayBoard()

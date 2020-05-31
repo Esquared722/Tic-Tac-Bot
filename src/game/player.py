@@ -23,7 +23,8 @@ class Player:
         return False
     
     def isValidMove(self, board, posX, posY):
-        return board.getBoard()[posY][posX] == ' '
+        if posX in range(3) and posY in range(3) and board.getBoard()[posY][posX] == ' ':
+            return True
     
     def getPlayer(self):
         return self.__player
