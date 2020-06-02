@@ -48,6 +48,8 @@ class Board:
             for j in range(3):
                 if self.board[i][j] == str(piece):
                     pieceCount += 1
+                else:
+                    break
             if pieceCount == 3:
                 return True
             pieceCount = 0
@@ -58,8 +60,10 @@ class Board:
         pieceCount = 0
         for i in range(3):
             for j in range(3):
-                if self.board[j][i] == str(piece):
+                if self.board[j][i] == str(piece): 
                     pieceCount += 1
+                else:
+                    break
             if pieceCount == 3:
                 return True
             pieceCount = 0
@@ -70,10 +74,13 @@ class Board:
     def checkDiags(self, piece):
         pieceCount = 0
 
-        if self.board[0][0] == str(piece) and self.board[1][1] == str(piece) and self.board[2][2] == str(piece):
+        if self.board[1][1] != str(piece):
+            return False
+
+        if self.board[0][0] == str(piece) and self.board[2][2] == str(piece):
             return True
         
-        if self.board[0][2] == str(piece) and self.board[1][1] == str(piece) and self.board[2][0] == str(piece):
+        if self.board[2][0] == str(piece) and  self.board[0][2] == str(piece):
             return True
         
         return False
