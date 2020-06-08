@@ -27,9 +27,15 @@ if __name__ == "__main__":
             p2 = Player(p2Name)
         else:
             bots = {1:'Randy'}
-            bot = int(input("Which bot would you like to play against?\n1.\tRandy\n\nEnter # of bot you would like to verse: "))
-            while bot not in range(1, len(bots) + 1):
-                bot = int(input("Invalid Input!\nWhich CPU would you like to play against?\n1.\tRandy\n\nEnter # of bot you would like to verse: "))
+            while True:
+                try:
+                    bot = int(input("Which CPU would you like to play against?\n1.\tRandy\n\nEnter # of the CPU you would like to verse: ")) # implement try-catch
+                    while bot not in range(1, len(bots) + 1):
+                        bot = int(input("Invalid Input!\nWhich CPU would you like to play against?\n1.\tRandy\n\nEnter # of the CPU you would like to verse: "))
+                except ValueError:
+                    print("Invalid value!")
+                    continue
+                break
             p2 = Player(bots[bot])
 
         game = Game(Board(), p1, p2)  # creates a game with two players
