@@ -34,7 +34,7 @@ class Player:
         return self.__player
 
     def getName(self):
-        return self.name
+        return self.__name
 
     def isTurn(self):
         self.__canMove = True

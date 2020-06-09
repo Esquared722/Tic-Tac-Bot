@@ -1,6 +1,6 @@
-from ttt import Game
-from player import Player
-from board import Board
+from game.ttt import Game
+from game.player import Player
+from game.board import Board
 
 if __name__ == "__main__":
 

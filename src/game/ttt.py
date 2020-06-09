@@ -1,6 +1,7 @@
 from random import randint
 from player import Player
 from board import Board
+import discord
 import string
 
 
@@ -25,7 +26,7 @@ class Game:
 
         return b.checkRows(plyPiece) or b.checkCols(plyPiece) or b.checkDiags(plyPiece)
 
-    def play(self):
+    async def play(self, channel):
         ''' Goes through the standard mode of play, with coin flip for first move, move making, and winning '''
 
         if randint(0, 1):
@@ -37,13 +38,13 @@ class Game:
         p2Name = self.__p2.getName()
         player = p1Name if self.__turn == 'p1' else p2Name
 
-        self.__board.displayBoard()
-        print("First turn goes to {} via coin flip!".format(player))
+        await self.__board.displayBoard(channel)
+        await channel.send("First turn goes to {} via coin flip!".format(player))
 
         while True:
 
             if len(self.__board) == 9:
-                print("Draw! Well fought game {} and {}!".format(p1Name, p2Name))
+                await channel.send("Draw! Well fought game {} and {}!".format(p1Name, p2Name))
                 return
 
             player = p1Name if self.__turn == 'p1' else p2Name
@@ -62,7 +63,7 @@ class Game:
                         "Invalid Move!\n{}, please submit a different move (col, row): ".format(player)) if player not in self.__bots else [None, None]
                 self.__turn = 'p1'
 
-            self.__board.displayBoard()
+            await self.__board.displayBoard(channel)
 
             if self.__checkWin():
                 break

@@ -1,3 +1,4 @@
+import discord
 class Board:
     ''' Traditional Tic-Tac-Toe Board '''
 
@@ -32,8 +33,8 @@ class Board:
         ''' Places piece object in given position on the board, simulating a move'''
         self.board[posY][posX] = str(piece)
 
-    def displayBoard(self):
-        print(self)
+    async def displayBoard(self, channel):
+        await channel.send(self)
 
     def clearBoard(self):
         ''' Clears board of all pieces '''
