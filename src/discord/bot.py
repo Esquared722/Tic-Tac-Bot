@@ -42,8 +42,10 @@ async def playGame(channel, p1, p2=''):
     from ttt import Game
     from player import Player
     from board import Board
-    await channel.send('This is a game between {} and {}.'.format(p1, 'a bot' if p2 is '' else p2))
     game = Game(Board(), Player(p1), Player(p2))
+    if game.getP1() is None and game.getP2() is None:
+        await channel.send('Sorry, users can only play one game at a time.')
+        return
     await game.play(channel)
 
 

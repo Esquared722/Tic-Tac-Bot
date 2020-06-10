@@ -12,9 +12,16 @@ class Game:
     __p2 = None
     __turn = ''
     __bots = ['Randy']
+    __players = set()
 
     def __init__(self, board, p1, p2):
         self.__board = board
+        if p1.getName() in Game.__players or p2.getName() in Game.__players:
+            self.__p1 = None
+            self.__p2 = None
+            return
+        Game.__players.add(p1.getName())
+        Game.__players.add(p2.getName())
         self.__p1 = p1
         self.__p2 = p2
 
@@ -70,6 +77,15 @@ class Game:
 
         winner = p1Name if self.__turn == 'p2' else p2Name
         print("Congratulations {}, you have won the match!".format(winner))
+    
+    def getPlayers(self):
+        return Game.__players
+    
+    def getP1(self):
+        return self.__p1
+    
+    def getP2(self):
+        return self.__p2
 
 
 def submitMove(msg):
