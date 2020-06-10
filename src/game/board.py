@@ -15,7 +15,7 @@ class Board:
                 boardStr += " " + \
                     self.board[i][j] + \
                     " |" if j < 2 else " {} \n".format(self.board[i][j])
-            boardStr += row if i < 2 else "\n   0   1   2\n"
+            boardStr += row if i < 2 else "\n   0   1   2 \n"
 
         return boardStr
 
@@ -33,8 +33,10 @@ class Board:
         ''' Places piece object in given position on the board, simulating a move'''
         self.board[posY][posX] = str(piece)
 
-    async def displayBoard(self, channel):
-        await channel.send(self)
+    async def displayBoard(self, channel, p1, p2):
+        embed=discord.Embed(title="Board")
+        embed.add_field(name="Game Between {} and {}".format(p1, p2), value="```\n" + str(self) + "\n```", inline=False)
+        await channel.send(embed=embed)
 
     def clearBoard(self):
         ''' Clears board of all pieces '''

@@ -38,7 +38,7 @@ class Game:
         p2Name = self.__p2.getName()
         player = p1Name if self.__turn == 'p1' else p2Name
 
-        await self.__board.displayBoard(channel)
+        await self.__board.displayBoard(channel, p1Name, p2Name)
         await channel.send("First turn goes to {} via coin flip!".format(player))
 
         while True:
@@ -63,7 +63,7 @@ class Game:
                         "Invalid Move!\n{}, please submit a different move (col, row): ".format(player)) if player not in self.__bots else [None, None]
                 self.__turn = 'p1'
 
-            await self.__board.displayBoard(channel)
+            await self.__board.displayBoard(channel, p1Name, p2Name)
 
             if self.__checkWin():
                 break

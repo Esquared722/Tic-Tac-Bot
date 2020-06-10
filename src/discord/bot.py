@@ -29,10 +29,10 @@ async def on_message(message):
         return
     commands = {'ttt': playGame}  # dictionary of bot commands
     try:
-        await commands[parameters[0][1:]](message.channel, message.author, message.mentions[0].name)
+        await commands[parameters[0][1:]](message.channel, message.author.name, message.mentions[0].name)
     except IndexError:
         # game against a bot
-        await commands[parameters[0][1:]](message.channel, message.author)
+        await commands[parameters[0][1:]](message.channel, message.author.nick)
     except KeyError:
         await message.channel.send('Invalid Command!')
         return
