@@ -1,9 +1,7 @@
 from random import randint
 from player import Player
 from board import Board
-import discord
-import string
-
+import discord, string
 
 class Game:
     ''' Engine for a standard game of Tic-Tac-Toe '''
@@ -33,7 +31,7 @@ class Game:
 
         return b.checkRows(plyPiece) or b.checkCols(plyPiece) or b.checkDiags(plyPiece)
 
-    async def play(self, channel):
+    async def play(self, channel, client):
         ''' Goes through the standard mode of play, with coin flip for first move, move making, and winning '''
 
         if randint(0, 1):
@@ -56,18 +54,18 @@ class Game:
 
             player = p1Name if self.__turn == 'p1' else p2Name
 
-            coords = submitMove(
-                "{}, please submit your move (col, row): ".format(player)) if player not in self.__bots else [None, None]
+            await channel.send("{} please submit your move. To submit a move type **!ttm x, y** where x and y are positions on the board.".format(player))
+            coords = await submitMove(channel, client)
 
             if self.__turn == 'p1':
                 while not self.__p1.move(self.__board, self.__p1.getPiece(), coords[0], coords[1]):
-                    coords = submitMove(
-                        "Invalid Move!\n{}, please submit a different move (col, row): ".format(player))
+                    await channel.send("Invalid Move! {}, please submit a different move **!ttm x, y**: ".format(player))
+                    coords = await submitMove(channel, client)
                 self.__turn = 'p2'
             else:
                 while not self.__p2.move(self.__board, self.__p2.getPiece(), coords[0], coords[1]):
-                    coords = submitMove(
-                        "Invalid Move!\n{}, please submit a different move (col, row): ".format(player)) if player not in self.__bots else [None, None]
+                    await channel.send("Invalid Move! {}, please submit a different move **!ttm x, y**: ".format(player))
+                    coords = await submitMove(channel, client)
                 self.__turn = 'p1'
 
             await self.__board.displayBoard(channel, p1Name, p2Name)
@@ -76,7 +74,9 @@ class Game:
                 break
 
         winner = p1Name if self.__turn == 'p2' else p2Name
-        print("Congratulations {}, you have won the match!".format(winner))
+        await channel.send("Congratulations {}, you have won the match!".format(winner))
+        Game.__players.remove(p1Name)
+        Game.__players.remove(p2Name)
     
     def getPlayers(self):
         return Game.__players
@@ -88,14 +88,12 @@ class Game:
         return self.__p2
 
 
-def submitMove(msg):
-    while True:
-        try:
-            move = input(msg).split(',')
-            move[0] = int(move[0].strip("(){}[]" + string.whitespace))
-            move[1] = int(move[1].strip("(){}[]" + string.whitespace))
-            break
-        except ValueError:
-            print("Invalid Coordinate!")
-    
+async def submitMove(channel, client):
+    coords = (await client.wait_for('message')).content.split(" ")[1]
+    try:
+        move = coords.split(',')
+        move[0] = int(move[0].strip("(){}[]" + string.whitespace))
+        move[1] = int(move[1].strip("(){}[]" + string.whitespace))
+    except ValueError:
+        return
     return move
