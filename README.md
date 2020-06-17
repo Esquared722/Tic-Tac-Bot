@@ -1,6 +1,6 @@
 # Tic-Tac-Bot
 
-A discord bot that allows users on a server duel in a friendly game of traditional Tic-Tac-Toe. Game history and statistics will be recorded for each user on the server, will be persisted in a database.
+A discord bot that allows users on a server duel in a game of Tic-Tac-Toe.
 
 ## Getting Started
 
@@ -8,11 +8,11 @@ To get this bot, follow this link [here](https://discord.com/api/oauth2/authoriz
 
 ## Commands
 
-* !ttt [other user]: Sends an invite to the other user, via mention, to a game of Tic-Tac-Toe, and will commence the game if the invitee accepts. Also, acts as an accept to a game if used by the invitee succeeding the invite.
+* !ttt @[other-user.id]: Sends an invite to the other user, via mention, to a game of Tic-Tac-Toe, and will commence the game if the invitee accepts.
+* !ttm [coords]: This command is only useable during a match. It allows a player to make a move on the board via a discord message. 
 
 ## Built With
 
 * [Python 3](https://docs.python.org/3/) - Language
 * [PyPI](https://pypi.org/) - Dependency Management
-* [PostgreSQL](https://www.postgresql.org/) - Database
 * [discord.py](https://github.com/Rapptz/discord.py) - API Wrapper
