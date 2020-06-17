@@ -1,7 +1,8 @@
 from random import randint
 from player import Player
 from board import Board
-import discord, string
+from string import whitespace
+import discord
 
 class Game:
     ''' Engine for a standard game of Tic-Tac-Toe '''
@@ -55,17 +56,17 @@ class Game:
             player = p1Name if self.__turn == 'p1' else p2Name
 
             await channel.send("{} please submit your move. To submit a move type **!ttm x, y** where x and y are positions on the board.".format(player))
-            coords = await submitMove(channel, client)
+            coords = await submitMove(channel, client, player)
 
             if self.__turn == 'p1':
                 while not self.__p1.move(self.__board, self.__p1.getPiece(), coords[0], coords[1]):
                     await channel.send("Invalid Move! {}, please submit a different move **!ttm x, y**: ".format(player))
-                    coords = await submitMove(channel, client)
+                    coords = await submitMove(channel, client, player)
                 self.__turn = 'p2'
             else:
                 while not self.__p2.move(self.__board, self.__p2.getPiece(), coords[0], coords[1]):
                     await channel.send("Invalid Move! {}, please submit a different move **!ttm x, y**: ".format(player))
-                    coords = await submitMove(channel, client)
+                    coords = await submitMove(channel, client, player)
                 self.__turn = 'p1'
 
             await self.__board.displayBoard(channel, p1Name, p2Name)
@@ -88,12 +89,15 @@ class Game:
         return self.__p2
 
 
-async def submitMove(channel, client):
-    coords = (await client.wait_for('message')).content.split(" ")[1]
+async def submitMove(channel, client, player):
+    def moveCheck(m):
+        return m.author.name == player
+    coords = (await client.wait_for('message', check=moveCheck)).content.split(" ")[1]
     try:
         move = coords.split(',')
-        move[0] = int(move[0].strip("(){}[]" + string.whitespace))
-        move[1] = int(move[1].strip("(){}[]" + string.whitespace))
+        move[0] = int(move[0].strip("(){}[]" + whitespace))
+        move[1] = int(move[1].strip("(){}[]" + whitespace))
     except ValueError:
         return
     return move
+

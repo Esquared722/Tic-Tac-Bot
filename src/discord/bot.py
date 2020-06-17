@@ -1,6 +1,4 @@
-import json
-import sys
-import discord
+import json, sys, discord
 
 sys.path.insert(1, '/Users/eric/projects/DiscordBots/TicTacBot/src/game')
 
@@ -22,12 +20,25 @@ async def on_message(message):
     if message.author == client.user or not message.content.startswith(prefix):
         return
     parameters = message.content.split(" ")
-    print(parameters)
     if parameters[0][1:] == 'ttm':
         return parameters[1]
-        # ttt.setMove(parameters[1])
     elif parameters[0][1:] == 'ttt':
-        await playGame(message.channel, message.author.name, message.mentions[0].name)
+        channel = message.channel
+        initiator = message.author
+        opponent = message.mentions[0]
+        await channel.send(":e_mail: <@{0}> {1.name} has invited you to a game of tic-tac-toe! Do you accept the challenge? **(y/n)**".format(opponent.id, initiator))
+        
+        def check(m):
+            return m.author.name == opponent.name
+
+        response = (await client.wait_for("message", check=check)).content
+        if response == 'y':
+            try:
+                await playGame(channel, initiator.name, opponent.name)
+            finally:
+                pass
+        else:
+            await channel.send(":x: <@{0}> {1.name} has refused your duel, try again next time!".format(initiator.id, opponent))
 
 
 async def playGame(channel, p1, p2=''):
