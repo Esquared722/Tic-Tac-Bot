@@ -4,6 +4,7 @@ from board import Board
 from string import whitespace
 import discord
 
+
 class Game:
     ''' Engine for a standard game of Tic-Tac-Toe '''
     __board = None
@@ -78,13 +79,13 @@ class Game:
         await channel.send("Congratulations {}, you have won the match!".format(winner))
         Game.__players.remove(p1Name)
         Game.__players.remove(p2Name)
-    
+
     def getPlayers(self):
         return Game.__players
-    
+
     def getP1(self):
         return self.__p1
-    
+
     def getP2(self):
         return self.__p2
 
@@ -100,4 +101,3 @@ async def submitMove(channel, client, player):
     except ValueError:
         return
     return move
-
