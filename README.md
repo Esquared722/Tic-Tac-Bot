@@ -8,8 +8,8 @@ To get this bot, follow this link [here](https://discord.com/api/oauth2/authoriz
 
 ## Commands
 
-* *!ttt* <@[other-user.id]>: Sends an invite to the other user, via mention, to a game of Tic-Tac-Toe, and will commence the game if the invitee accepts.
-    * *!ttm* x, y: It allows a player to move their piece to a (row[x], col[y]) position on the board on their turn.
+* **!ttt** <@[other-user.id]>: Sends an invite to the other user, via mention, to a game of Tic-Tac-Toe, and will commence the game if the invitee accepts.
+    * **!ttm** x, y: It allows a player to move their piece to a (row[x], col[y]) position on the board on their turn.
 
 ## Built With
 
