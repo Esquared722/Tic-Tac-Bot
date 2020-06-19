@@ -16,6 +16,8 @@ To get this bot, follow this link [here](https://discord.com/api/oauth2/authoriz
 * [Python 3](https://docs.python.org/3/) - Language
 * [PyPI](https://pypi.org/) - Dependency Management
 * [discord.py](https://github.com/Rapptz/discord.py) - API Wrapper
+* [Giphy API](https://developers.giphy.com/docs/sdk) - GIF finder
 
-## Attributions
+### Attributions
+
 ![giphy attribution mark](https://github.com/Esquared722/Tic-Tac-Bot/raw/master/raw-assets/readme/PoweredBy_200px-White_HorizLogo.png)
