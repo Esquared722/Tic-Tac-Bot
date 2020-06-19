@@ -1,10 +1,9 @@
-from random import randint
 from player import Player
 from board import Board
+from random import randint, choice
 from string import whitespace
-import discord
 import pip._vendor.requests as requests
-import json
+import discord, json
 
 with open("./config.json", "r") as read_file:
     config = json.load(read_file)
@@ -111,9 +110,7 @@ async def submitMove(channel, client, player):
     return move
 
 def getVictoryGif():
-
-    from random import choice
+    ''' Returns a gif from a pool of gifs requested from Giphy via API '''
     payload = {'api_key': GIPHY_API_KEY, 'q': choice(['victory', 'champion', 'winner', 'congratulations', 'celebration']), 'lang': 'en'}
     response = requests.get('https://api.giphy.com/v1/gifs/search', params=payload)
-    gif = choice(response.json()['data'])
-    return gif
+    return choice(response.json()['data'])
