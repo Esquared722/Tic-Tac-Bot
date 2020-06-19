@@ -1,12 +1,11 @@
-import json, sys, discord, asyncio
-from string import whitespace
+import json, sys, discord
 
 sys.path.insert(1, '/Users/eric/projects/DiscordBots/TicTacBot/src/game')
 
 with open("./config.json", "r") as read_file:
     config = json.load(read_file)
 
-token, prefix, cID = config["token"], config["prefix"], config["channel_id"]
+token, prefix= config["token"], config["prefix"]
 
 client = discord.Client()
 
@@ -18,14 +17,12 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    # TODO fix index out of range for !ttt
     if message.author == client.user or not message.content.startswith(prefix):
         return
     parameters = message.content.split(" ")
     if parameters[0][1:] == 'ttm':
-        try:
-            return parameters[1]
-        except IndexError:
-            return 
+        return parameters[1]
     elif parameters[0][1:] == 'ttt':
         channel = message.channel
         initiator = message.author
@@ -54,14 +51,17 @@ async def on_message(message):
 
 
 async def gameRequest(channel, initiator, opponent):
+    from asyncio import TimeoutError
+    from string import whitespace
     response = None
 
     def check(m):
         return m.author.name == opponent.name
 
     try:
+        
         response = (await client.wait_for("message", check=check, timeout=60.0)).content.strip(whitespace).lower()
-    except asyncio.TimeoutError:
+    except TimeoutError:
         await channel.send(":x: <@{0.id}> request for game with **{1.name}** has timed out. " \
             "Please, resend the request!".format(initiator, opponent))
 

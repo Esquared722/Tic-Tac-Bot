@@ -15,6 +15,8 @@ class Player:
         Player.__player += 1
         self.__userDisc = userDisc
         self.__name = userDisc.name
+        if Player.__player > 2:
+            Player.__player = 1
         self.__piece = Piece(self.__player)
 
     def __int__(self):
