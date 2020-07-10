@@ -3,13 +3,18 @@ from board import Board
 from player import Player
 from random import randint, choice
 from string import whitespace
-import discord, json, pip._vendor.requests as requests
+import discord
+import json
+import pip._vendor.requests as requests
 
 with open("./config.json", "r") as read_file:
     config = json.load(read_file)
 
 GIPHY_API_KEY = config["giphy_api_key"]
+
+
 class Game:
+    # TODO check if one of the users left the server??
     ''' Engine for a standard game of Tic-Tac-Toe '''
     __board = None
     __p1 = None
@@ -57,21 +62,20 @@ class Game:
                 return
 
             player = self.__turn
-            await channel.send("<@{}> please submit your move. To submit a move type **!ttm x, y**" \
-                "\n:1234: Use numbers on the sides as a guide :1234:".format(player.getUID()))
+            await channel.send("<@{}> please submit your move. To submit a move type **!ttm x, y**"
+                               "\n:1234: Use numbers on the sides as a guide :1234:"
+                               "\n:alarm_clock: You have **5 minutes** to make your move.".format(player.getUID()))
 
             coords = await self.__submitMove(channel, client, player)
             if coords is None:
                 return
 
             while not self.__turn.move(self.__board, self.__turn.getPiece(), coords[0], coords[1]):
-                await channel.send("***Invalid Move!*** <@{}>, please submit a different move **!ttm x, y**" \
-                    "\n:1234: Use numbers on the sides as a guide :1234:".format(player.getUID()))
+                await channel.send("***Invalid Move!*** <@{}>, please submit a different move **!ttm x, y**"
+                                   "\n:1234: Use numbers on the sides as a guide :1234:".format(player.getUID()))
                 coords = await self.__submitMove(channel, client, player)
                 if coords is None:
                     return
-            
-            
 
             await self.__board.displayBoard(channel, p1Name, p2Name)
 
@@ -80,10 +84,8 @@ class Game:
 
             self.__turn = self.__p2 if self.__turn.getUID() == self.__p1.getUID() else self.__p1
 
-        
         winner = self.__turn.getName()
         loser = p2Name if self.__turn.getUID() == self.__p1.getUID() else p1Name
-
         await winMessage(channel, winner, loser)
 
         Game.__players.remove(p1Name)
@@ -98,40 +100,41 @@ class Game:
     def getP2(self):
         return self.__p2
 
-
     async def __submitMove(self, channel, client, player):
         def moveCheck(m):
             return m.author.name == player.getName() and m.content.startswith("!ttm") and len(m.content.strip(whitespace)) > 4
         try:
-            move = (await client.wait_for('message', check=moveCheck, timeout=600)).content.split(" ")[1].split(",")
+            move = (await client.wait_for('message', check=moveCheck, timeout=300)).content.split(" ")[1].split(",")
         except TimeoutError:
-            await channel.send("<@{}> If you were not aware it is **your turn**, please make your move! To submit a move type **!ttm x, y**\n" \
-                ":alarm_clock: You have **10 minutes** to make your move. If you *don't* you will ***automatically forfeit the match***!".format(player.getUID()))
-            try:
-                move = (await client.wait_for('message', check=moveCheck, timeout=600)).content.split(" ")[1].split(",")
-            except TimeoutError:
-                winner = self.__p2.getName() if self.__turn.getUID() == self.__p1.getUID() else self.__p1.getName()
-                await channel.send(":alarm_clock: <@{}> ***TIMEOUT*** for turn, you have been ***automatically forfeited*** from the match! {} wins by default.".format(player.getUID(), winner))
-                await winMessage(channel, winner, player.getName())
-                return None
+            winner = self.__p2.getName() if self.__turn.getUID(
+            ) == self.__p1.getUID() else self.__p1.getName()
+            await channel.send(":alarm_clock: <@{}> ***TIMEOUT*** for turn, you have been ***automatically forfeited*** from the match! **{}** wins by default.".format(player.getUID(), winner))
+            await winMessage(channel, winner, player.getName())
+            return None
         try:
+            if move == ['']:
+                await channel.send(":x: <@{}> ***Invalid input***, make sure you only leave one space between the move command, !ttm, and the coordinate pair".format(player.getUID()))
+                return await self.__submitMove(channel, client, player)
             move[0] = int(move[0].strip("(){}[]" + whitespace))
             move[1] = int(move[1].strip("(){}[]" + whitespace))
         except ValueError:
-            await channel.send(":x: <@{}> ***Invalid coordinates***, " \
-                "make sure your coordinates are a pair of integers between [0-2]!".format(player.getUID()))
+            await channel.send(":x: <@{}> ***Invalid coordinates***, "
+                               "make sure your coordinates are a pair of integers between [0-2]!".format(player.getUID()))
             move = (await self.__submitMove(channel, client, player))
-            return move
+        return move
 
+
+# TODO upload the gif instead of using url, for cleaner look
 def getVictoryGif():
     ''' Returns a gif from a pool of gifs requested from Giphy via API '''
-    payload = {'api_key': GIPHY_API_KEY, 'q': choice(['victory', 'champion', 'winner', 'congratulations', 'celebration']), 'lang': 'en'}
-    response = requests.get('https://api.giphy.com/v1/gifs/search', params=payload)
+    payload = {'api_key': GIPHY_API_KEY, 'q': choice(
+        ['victory', 'champion', 'winner', 'congratulations', 'celebration']), 'lang': 'en'}
+    response = requests.get(
+        'https://api.giphy.com/v1/gifs/search', params=payload)
     return choice(response.json()['data'])
+
 
 async def winMessage(channel, winner, loser):
     gifSlug = getVictoryGif()['slug']
-    await channel.send("Attention @everyone :bell: ***{}***, has won the match vs. *{}*! :partying_face:" \
-            "\nhttps://giphy.com/gifs/{}".format(winner, loser, gifSlug))
-        
-        
+    await channel.send("Attention @everyone :bell: ***{}***, has won the match vs. *{}*! :partying_face:"
+                       "\nhttps://giphy.com/gifs/{}".format(winner, loser, gifSlug))

@@ -1,12 +1,15 @@
-import json, sys, discord
+import json
+import sys
+import discord
 
 sys.path.insert(1, '/Users/eric/projects/DiscordBots/TicTacBot/src/game')
 
 with open("./config.json", "r") as read_file:
     config = json.load(read_file)
 
-token, prefix= config["token"], config["prefix"]
-
+token, prefix = config["token"], config["prefix"]
+requests = set()
+boardOccupied = False
 client = discord.Client()
 
 
@@ -17,7 +20,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    # TODO fix index out of range for !ttt
+    # TODO fix index out of range for !ttt and !ttm
     if message.author == client.user or not message.content.startswith(prefix):
         return
     parameters = message.content.split(" ")
@@ -26,26 +29,37 @@ async def on_message(message):
     elif parameters[0][1:] == 'ttt':
         channel = message.channel
         initiator = message.author
-        opponent = message.mentions[0]
+        try:
+            if initiator in requests:
+                await channel.send(":x: <@{0.id}> You are already in a game and can not make/accept requests".format(initiator))
+                return
+            opponent = message.mentions[0]
+            if opponent in requests:
+                await channel.send(":x: <@{0.id}> **{1.name}** has already been sent a request by another user".format(initiator, opponent))
+                return
+        except IndexError:
+            await channel.send(':x: To request a game with someone you must mention them **(Ex. "!ttm @User")**')
+            return
 
-        await channel.send(":e_mail: <@{0.id}> **{1.name}** has invited you to a game of " \
-            "tic-tac-toe! Do you accept the challenge? **(y/n)**".format(opponent, initiator))
+        await channel.send(":e_mail: <@{0.id}> **{1.name}** has invited you to a game of "
+                           "tic-tac-toe! Do you accept the challenge? **(y/n)**".format(opponent, initiator))
 
+        requests.add(opponent)
         response = await gameRequest(channel, initiator, opponent)
 
         if response not in ['y', 'n', 'yes', 'no']:
-            await channel.send(":exclamation: <@{0.id}> ***INVALID INPUT*** please respond " \
-                "with **(y/n)** to {1.name}'s request. One more try.".format(opponent, initiator))
+            await channel.send(":exclamation: <@{0.id}> ***INVALID INPUT*** please respond "
+                               "with **(y/n)** to {1.name}'s request. One more try.".format(opponent, initiator))
             response = await gameRequest(channel, initiator, opponent)
 
         if response in ['y', 'yes']:
             await playGame(channel, initiator, opponent)
         elif response in ['n', 'no']:
-            await channel.send(":x: <@{0.id}> **{1.name}** has refused your duel," \
-                " try again next time!".format(initiator, opponent))
+            await channel.send(":x: <@{0.id}> **{1.name}** has refused your duel,"
+                               " try again next time!".format(initiator, opponent))
         else:
-            await channel.send(":x: <@{0.id}> **{1.name}** failed to accept your request " \
-                "with valid input. Please, resend the request!".format(initiator, opponent))
+            await channel.send(":x: <@{0.id}> **{1.name}** failed to accept your request "
+                               "with valid input. Please, resend the request!".format(initiator, opponent))
     else:
         return None
 
@@ -59,11 +73,10 @@ async def gameRequest(channel, initiator, opponent):
         return m.author.name == opponent.name
 
     try:
-        
-        response = (await client.wait_for("message", check=check, timeout=60.0)).content.strip(whitespace).lower()
+        response = (await client.wait_for("message", check=check, timeout=60)).content.strip(whitespace).lower()
     except TimeoutError:
-        await channel.send(":x: <@{0.id}> request for game with **{1.name}** has timed out. " \
-            "Please, resend the request!".format(initiator, opponent))
+        await channel.send(":x: <@{0.id}> request for game with **{1.name}** has timed out. "
+                           "Please, resend the request!".format(initiator, opponent))
 
     return response
 
@@ -73,9 +86,15 @@ async def playGame(channel, p1, p2=''):
     from board import Board
     from ttt import Game
     game = Game(Board(), Player(p1), Player(p2))
-    if game.getP1() is None and game.getP2() is None:
-        await channel.send(':x: Sorry, users can only play one game at a time.')
+    global boardOccupied
+    if boardOccupied:
+        await channel.send(':x: Only one pair of players can occupy the board at a time.')
     else:
+        boardOccupied = True
+        requests.add(p1)
         await game.play(channel, client)
+        boardOccupied = False
+        requests.remove(p1)
+        requests.remove(p2)
 
 client.run(token)
