@@ -104,7 +104,7 @@ class Game:
         def moveCheck(m):
             return m.author.name == player.getName() and m.content.startswith("!ttm") and len(m.content.strip(whitespace)) > 4
         try:
-            move = (await client.wait_for('message', check=moveCheck, timeout=300)).content.split(" ")[1].split(",")
+            move = (await client.wait_for('message', check=moveCheck, timeout=300)).content[4:].split(",")
         except TimeoutError:
             winner = self.__p2.getName() if self.__turn.getUID(
             ) == self.__p1.getUID() else self.__p1.getName()
@@ -112,14 +112,11 @@ class Game:
             await winMessage(channel, winner, player.getName())
             return None
         try:
-            if move == ['']:
-                await channel.send(":x: <@{}> ***Invalid input***, make sure you only leave one space between the move command, !ttm, and the coordinate pair".format(player.getUID()))
-                return await self.__submitMove(channel, client, player)
             move[0] = int(move[0].strip("(){}[]" + whitespace))
             move[1] = int(move[1].strip("(){}[]" + whitespace))
         except ValueError:
             await channel.send(":x: <@{}> ***Invalid coordinates***, "
-                               "make sure your coordinates are a pair of integers between [0-2]!".format(player.getUID()))
+                               "make sure your coordinates are a pair of integers between [0-2] and that they are separated by a comma!".format(player.getUID()))
             move = (await self.__submitMove(channel, client, player))
         return move
 
