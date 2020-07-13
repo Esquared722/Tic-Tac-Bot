@@ -20,15 +20,15 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    # TODO fix index out of range for !ttt and !ttm
     if message.author == client.user or not message.content.startswith(prefix):
         return
     parameters = message.content.split(" ")
-    if parameters[0][1:] == 'ttm':
+    command = parameters[0][1:]
+    channel = message.channel
+    initiator = message.author
+    if command == 'ttm':
         return parameters[1]
-    elif parameters[0][1:] == 'ttt':
-        channel = message.channel
-        initiator = message.author
+    elif command == 'ttt':
         try:
             if initiator in requests:
                 await channel.send(":x: <@{0.id}> You are already in a game and can not make/accept requests".format(initiator))
@@ -60,6 +60,13 @@ async def on_message(message):
         else:
             await channel.send(":x: <@{0.id}> **{1.name}** failed to accept your request "
                                "with valid input. Please, resend the request!".format(initiator, opponent))
+    elif command == 'tthelp':
+        embed=discord.Embed(title="Commands")
+        embed.add_field(name="!ttt <@[other-user.id]>", value="Sends an invite to the other user, via mention, to a game of Tic-Tac-Toe, and will commence the game if the invitee accepts.", inline=False)
+        embed.add_field(name="!ttm x, y", value="It allows a player to move their piece to a (col[x], row[y]) position on the board on their turn.", inline=False)
+        embed.add_field(name="!tthelp", value="Gives information on all commands and a link to where the source code can be examined.")
+        embed.add_field(name="Full Information", value="Look at the [github](https://github.com/Esquared722/Tic-Tac-Bot)")
+        await channel.send(embed=embed)
     else:
         return None
 
