@@ -133,5 +133,5 @@ def getVictoryGif():
 
 async def winMessage(channel, winner, loser):
     gifSlug = getVictoryGif()['slug']
-    await channel.send("Attention @everyone :bell: ***{}***, has won the match vs. *{}*! :partying_face:"
+    await channel.send("Attention @here :bell: ***{}***, has won the match vs. *{}*! :partying_face:"
                        "\nhttps://giphy.com/gifs/{}".format(winner, loser, gifSlug))
