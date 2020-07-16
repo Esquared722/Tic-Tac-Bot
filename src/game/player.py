@@ -1,5 +1,4 @@
-from piece import Piece
-from discord import User
+from game.piece import Piece
 
 
 class Player:
@@ -22,7 +21,7 @@ class Player:
     def __int__(self):
         return self.__player
 
-    def move(self, board, piece, posX = None, posY = None):  # check for valid move
+    def move(self, board, piece, posX=None, posY=None):  # check for valid move
         # if self.__name == 'Randy': # bot Randy move
         #     from random import randint
         #     posX, posY = randint(0, 2), randint(0, 2)
@@ -36,7 +35,6 @@ class Player:
 
     def getPiece(self):
         return self.__piece
-    
+
     def getUID(self):
         return self.__userDisc.id
-    

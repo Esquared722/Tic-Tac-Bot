@@ -1,36 +1,27 @@
 from asyncio import TimeoutError
-from board import Board
-from player import Player
+from game.board import Board
+from game.player import Player
 from random import randint, choice
 from string import whitespace
 import discord
 import json
 import pip._vendor.requests as requests
 
-with open("./config.json", "r") as read_file:
-    config = json.load(read_file)
+with open("game/giphyKey.json", "r") as read_file:
+    giphyKey = json.load(read_file)
 
-GIPHY_API_KEY = config["giphy_api_key"]
+GIPHY_API_KEY = giphyKey["giphy_api_key"]
 
 
 class Game:
-    # TODO check if one of the users left the server??
     ''' Engine for a standard game of Tic-Tac-Toe '''
     __board = None
     __p1 = None
     __p2 = None
     __turn = None
-    __bots = ['Randy']
-    __players = set()
 
     def __init__(self, board, p1, p2):
         self.__board = board
-        if p1.getName() in Game.__players or p2.getName() in Game.__players:
-            self.__p1 = None
-            self.__p2 = None
-            return
-        Game.__players.add(p1.getName())
-        Game.__players.add(p2.getName())
         self.__p1 = p1
         self.__p2 = p2
 
@@ -87,9 +78,6 @@ class Game:
         winner = self.__turn.getName()
         loser = p2Name if self.__turn.getUID() == self.__p1.getUID() else p1Name
         await winMessage(channel, winner, loser)
-
-        Game.__players.remove(p1Name)
-        Game.__players.remove(p2Name)
 
     def getPlayers(self):
         return Game.__players

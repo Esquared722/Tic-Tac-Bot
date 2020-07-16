@@ -1,8 +1,9 @@
 import json
 import sys
 import discord
+import logging
 
-sys.path.insert(1, '/Users/eric/projects/DiscordBots/TicTacBot/src/game')
+logging.basicConfig(level=logging.INFO)
 
 with open("./config.json", "r") as read_file:
     config = json.load(read_file)
@@ -61,11 +62,15 @@ async def on_message(message):
             await channel.send(":x: <@{0.id}> **{1.name}** failed to accept your request "
                                "with valid input. Please, resend the request!".format(initiator, opponent))
     elif command == 'tthelp':
-        embed=discord.Embed(title="Commands")
-        embed.add_field(name="!ttt <@[other-user.id]>", value="Sends an invite to the other user, via mention, to a game of Tic-Tac-Toe, and will commence the game if the invitee accepts.", inline=False)
-        embed.add_field(name="!ttm x, y", value="It allows a player to move their piece to a (col[x], row[y]) position on the board on their turn.", inline=False)
-        embed.add_field(name="!tthelp", value="Gives information on all commands and a link to where the source code can be examined.")
-        embed.add_field(name="Full Information", value="Look at the [github](https://github.com/Esquared722/Tic-Tac-Bot)")
+        embed = discord.Embed(title="Commands")
+        embed.add_field(name="!ttt <@[other-user.id]>",
+                        value="Sends an invite to the other user, via mention, to a game of Tic-Tac-Toe, and will commence the game if the invitee accepts.", inline=False)
+        embed.add_field(
+            name="!ttm x, y", value="It allows a player to move their piece to a (col[x], row[y]) position on the board on their turn.", inline=False)
+        embed.add_field(
+            name="!tthelp", value="Gives information on all commands and a link to where the source code can be examined.")
+        embed.add_field(name="Full Information",
+                        value="Look at the [github](https://github.com/Esquared722/Tic-Tac-Bot)")
         await channel.send(embed=embed)
     else:
         return None
@@ -88,10 +93,10 @@ async def gameRequest(channel, initiator, opponent):
     return response
 
 
-async def playGame(channel, p1, p2=''):
-    from player import Player
-    from board import Board
-    from ttt import Game
+async def playGame(channel, p1, p2):
+    from game.player import Player
+    from game.board import Board
+    from game.ttt import Game
     game = Game(Board(), Player(p1), Player(p2))
     global boardOccupied
     if boardOccupied:
