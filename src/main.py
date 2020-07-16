@@ -5,7 +5,7 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-with open("./config.json", "r") as read_file:
+with open("src/config.json", "r") as read_file:
     config = json.load(read_file)
 
 token, prefix = config["token"], config["prefix"]
