@@ -39,7 +39,7 @@ async def on_message(message):
                 await channel.send(":x: <@{0.id}> **{1.name}** has already been sent a request by another user".format(initiator, opponent))
                 return
         except IndexError:
-            await channel.send(':x: To request a game with someone you must mention them **(Ex. "!ttm @User")**')
+            await channel.send(':x: To request a game with someone you must mention them **(Ex. "!ttt @User")**')
             return
 
         await channel.send(":e_mail: <@{0.id}> **{1.name}** has invited you to a game of "

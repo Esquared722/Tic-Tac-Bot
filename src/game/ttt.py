@@ -7,7 +7,7 @@ import discord
 import json
 import pip._vendor.requests as requests
 
-with open("game/giphyKey.json", "r") as read_file:
+with open("src/game/giphyKey.json", "r") as read_file:
     giphyKey = json.load(read_file)
 
 GIPHY_API_KEY = giphyKey["giphy_api_key"]
